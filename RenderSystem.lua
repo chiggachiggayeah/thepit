@@ -1,5 +1,6 @@
 local _System = require "System"
 local g_types = require "GTypes"
+local Settings = require "Settings"
 
 --template
 local t = {}
@@ -7,8 +8,6 @@ t.colors = {
     white = {"255", "255", "255", "255"} 
 }
 t[g_types.SNAKE] = function(val)
-    love.graphics.setColor(t.colors.white)
-    love.graphics.rectangle("fill", val.pos.x, val.pos.y, val.width, val.height)
 end
 --
 
@@ -22,11 +21,17 @@ function _RenderSystem(template)
     
     function self.update()
         for i, v in ipairs(registry) do
-            for k, fn in pairs(template) do
-                if v.is_a(k) then
-                    fn(v)
-                end
-            end
+            v.draw()
+            --for k, val in pairs(v.types) do
+            --    if template[k] ~= nil then
+            --        template[k](v)
+            --    end
+            --end
+            --for k, fn in pairs(template) do
+            --    if v.is_a(k) then
+            --        fn(v)
+            --    end
+            --end
         end
     end
 

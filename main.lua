@@ -1,3 +1,4 @@
+local Settings = require "Settings"
 
 local System = require "AllSystems"
 local _Component = require "Component"
@@ -12,48 +13,25 @@ local _Mongoose = require "Mongoose"
 local Snake = _Snake(Entity)
 local Mongoose = _Mongoose(Entity)
 
---the types could be encapsulated by a GameSystem, wherein, when entities are registered with it, the type is added if it hadn't already existed
---types
-
--- SNAKE, MONGOOSE, BUSH = "SNAKE", "MONGOOSE", "BUSH"
--- g_types = {SNAKE, MONGOOSE, BUSH}
---systems
-
---rendering template
-
---RenderSystem = _RenderSystem(t)
---PhysicsSystem = _PhysicsSystem()
-
-
---entities
-
-
-
-
---end entities
-
---components
---adding a component to an entity, should then let the relevant systems know about that component
-
---systems
---collision system
---what about an ai system?
---physics system? for time steps and updating the world
---render system
-
---return system instances from various files so that you don't allow making additional systems
 
 
 function love.load()
+    love.window.setMode(Settings.windowWidth, Settings.windowHeight, {})
+
     snake = Snake()
-    snake2 = Snake({pos = {x = 100, y = 100}})
+    snake2 = Snake({pos = {x = 10, y = 10}, heading = {x = -1, y = 0}})
 end
 
 function love.update(dt)
+    System.PhysicsSystem.update(dt)
+end
+
+function love.keypressed(key)
+    System.UserInputSystem.update(key)
 end
 
 function love.draw()
-    --love.graphics.print("Hello world!", 400, 300) 
+    -- could loop through and call every system's update method
     System.RenderSystem.update()
 end
 
