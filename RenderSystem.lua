@@ -11,6 +11,9 @@ t[g_types.SNAKE] = function(val)
 end
 --
 
+--BUGS
+--[] a crashing bug, if two snakes collide offscreen
+
 function _RenderSystem(template)
     local self = _System()
     local registry = {} 
@@ -19,8 +22,12 @@ function _RenderSystem(template)
         table.insert(registry, entity)
     end 
     
+    
     function self.update()
+        -- for screen wrap you have to look at the segments
         for i, v in ipairs(registry) do
+            
+
             v.draw()
             --for k, val in pairs(v.types) do
             --    if template[k] ~= nil then

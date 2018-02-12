@@ -1,3 +1,5 @@
+Settings = require "Settings"
+
 function Component(systems)
     local components = {
         Drawable = setmetatable({}, {
@@ -12,6 +14,7 @@ function Component(systems)
                     segments = {},
                     draw = function(img)
                     end,
+ 
                     register = function(entity)
                         systems.RenderSystem.register(entity)
                     end
@@ -54,6 +57,20 @@ function Component(systems)
                         x = 0,
                         y = 0,
                     },
+
+                    screenWrap = function(dir, pos)
+                        local candidatePos = pos
+                        if(dir == "LEFT") then
+                            candidatePos.x = pos.x + Settings.windowWidth / Settings.unit
+                        elseif (dir == "RIGHT") then
+                            candidatePos.x = pos.x - Settings.windowWidth / Settings.unit
+                        elseif (dir == "UP") then
+                            candidatePos.y = pos.y + Settings.windowHeight / Settings.unit
+                        elseif (dir == "DOWN") then
+                            candidatePos.y = pos.y - Settings.windowHeight / Settings.unit
+                        end
+
+                    end,
                     register = function(entity)
                         systems.PhysicsSystem.register(entity)
                     end
@@ -91,7 +108,26 @@ function Component(systems)
 
                         return newHeading
                     end,
+                    invertHeading = function(heading)
+                        local newHeading = {x = 0, y = 1}
+                        if heading.x == 0 and heading.y == -1 then
+                            newHeading.x = 0
+                            newHeading.y = 1
+                        elseif heading.x == 1 and heading.y == 0 then
+                            newHeading.x = -1
+                            newHeading.y = 0
+                        elseif heading.x == 0 and heading.y == 1 then
+                            newHeading.x = 0 
+                            newHeading.y = -1
+                        else
+                            newHeading.x = 1
+                            newHeading.y = 0 
 
+                        end
+
+                        return newHeading
+
+                    end,
                     register = function(entity)
                         systems.UserInputSystem.register(entity)
                     end

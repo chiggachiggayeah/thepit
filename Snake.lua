@@ -5,7 +5,7 @@ local utils = require "utils"
 function _Snake(Entity)
     return function(overrides)
         local self = Entity({"Drawable", "Collidable", "Controllable"})
-
+        local numSegments = 9
         --add all the component elements to self
         --register with relevant systems
         
@@ -22,18 +22,35 @@ function _Snake(Entity)
         end
 
         -- init segments based on pos argument
-        for i = 0, 4, 1 do
+        for i = 1, numSegments, 1 do
             table.insert(self.segments, {x = self.pos.x + i, y = self.pos.y})
         end
 
+        --print("Pos is: "..tostring(self.pos.x)..", "..tostring(self.pos.y)) 
         function self.revise()
             -- the previous heading wasn't a good one
 
             -- reset segments
             self.segments = utils.clone(self.previous) 
 
-            --pick a new heading
-            self.heading = self.rotateHeading(self.heading)
+            local clonedPos = utils.clone(self.pos)
+            self.backup()
+
+            --detect a screen wrap
+            if math.abs(self.pos.x - clonedPos.x) == Settings.windowWidth / Settings.unit then
+                self.heading = self.rotateHeading(self.heading)
+            elseif math.abs(self.pos.y - clonedPos.y) == Settings.windowHeight / Settings.unit then
+                self.heading = self.rotateHeading(self.heading)
+            else
+                -- restore pos
+                self.pos = clonedPos
+                 --pick a new heading
+                self.heading = self.rotateHeading(self.heading)
+            end
+        end
+        
+        function self.backup()
+            self.segments = utils.clone(self.previous)
         end
 
         function self.step()

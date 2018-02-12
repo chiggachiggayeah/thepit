@@ -25,6 +25,10 @@ function utils.clone(t)
     end
 end
 
+function utils.posEqual(p1, p2)
+    return p1.x == p2.x and p1.y == p2.y
+end
+
 function utils.test()
     local a = {hello = "foo", hey = "bar"}
     local b = utils.clone(a)

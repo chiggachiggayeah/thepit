@@ -27,7 +27,6 @@ function _Entity(components)
         end
 
         for i, c in ipairs(comps) do
-            print("Component is: " .. tostring(c))
             local component = components[c]()
             component.register(self)
             for k, v in pairs(component) do
